@@ -1,0 +1,25 @@
+# Import PuLP
+from pulp import LpMaximize, LpProblem, LpVariable, value
+
+# Define the problem
+model = LpProblem("Production-Optimization", LpMaximize)
+
+# Define decision variables
+A = LpVariable("Product_A", lowBound=0, cat='Continuous')
+B = LpVariable("Product_B", lowBound=0, cat='Continuous')
+
+# Objective function
+model += 30 * A + 50 * B, "Total_Profit"
+
+# Constraints
+model += 3 * A + 2 * B <= 120, "Labor"
+model += 2 * A + 4 * B <= 100, "Material"
+
+# Solve
+model.solve()
+
+# Results
+print(f"Status: {model.status}, {model.solver.status}")
+print(f"Produce {A.varValue} units of Product A")
+print(f"Produce {B.varValue} units of Product B")
+print(f"Maximum Profit: ₹{value(model.objective)}")
